@@ -35,8 +35,7 @@ cd hemera_mvp
 # 创建虚拟环境
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-# 或
-venv\Scripts\activate  # Windows
+
 
 # 安装依赖
 pip install -r requirements.txt
@@ -48,33 +47,10 @@ pip install -r requirements.txt
 # 创建数据库
 createdb hemera_mvp
 
-# 运行数据库迁移
-python manage.py migrate
+
 ```
 
-### 4. 配置环境变量
-
-创建 `.env` 文件：
-
-```bash
-cp .env.example .env
-```
-
-编辑 `.env` 文件，配置以下参数：
-
-```env
-# 数据库配置
-DATABASE_URL=postgresql://user:password@localhost:5432/hemera_mvp
-
-# RPC 节点配置
-ETH_RPC_URL=https://your-ethereum-rpc-endpoint
-
-# 索引配置
-START_BLOCK=0
-BATCH_SIZE=100
-```
-
-### 5. 启动索引器
+### 4. 启动索引器
 
 ```bash
 python main.py
@@ -92,10 +68,6 @@ python main.py
 | `BATCH_SIZE` | 批处理大小 | 100 |
 | `LOG_LEVEL` | 日志级别 | INFO |
 
-### 高级配置
-
-详细配置选项请参考 `config/settings.py` 文件。
-
 ## 项目结构
 
 ```
@@ -107,23 +79,6 @@ hemera_mvp/
 ├── tests/            # 测试文件
 ├── main.py          # 主入口
 └── requirements.txt # 依赖列表
-```
-
-## API 使用
-
-### 查询区块数据
-
-```python
-from hemera_mvp import BlockIndexer
-
-indexer = BlockIndexer()
-block_data = indexer.get_block(block_number=12345)
-```
-
-### 查询交易数据
-
-```python
-tx_data = indexer.get_transaction(tx_hash="0x...")
 ```
 
 ## 与原项目的区别
@@ -144,16 +99,6 @@ tx_data = indexer.get_transaction(tx_hash="0x...")
 pytest tests/
 ```
 
-### 代码风格
-
-```bash
-# 格式化代码
-black .
-
-# 检查代码风格
-flake8 .
-```
-
 ## 贡献指南
 
 欢迎提交 Issue 和 Pull Request！
@@ -167,14 +112,10 @@ flake8 .
 ## 路线图
 
 - [ ] 支持更多区块链网络
-- [ ] 添加 WebSocket 支持
+- [ ] 添加常用的协议
 - [ ] 优化索引性能
 - [ ] 添加更多查询接口
 - [ ] 完善文档
-
-## 许可证
-
-本项目基于 [Apache License 2.0](LICENSE) 开源。
 
 ## 致谢
 
@@ -183,7 +124,6 @@ flake8 .
 
 ## 联系方式
 
-- 作者：gududefengzhong
 - 项目地址：https://github.com/gududefengzhong/hemera_mvp
 - Issues：https://github.com/gududefengzhong/hemera_mvp/issues
 
