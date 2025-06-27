@@ -12,7 +12,7 @@ def test_mvp():
     # 创建导出器
     exporters = [
         ConsoleExporter,
-        JsonExporter("output/blocks")
+        JsonExporter("output")
     ]
 
     # 创建数据缓冲区

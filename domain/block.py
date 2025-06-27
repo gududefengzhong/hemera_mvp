@@ -23,9 +23,7 @@ class Block:
             hash=block_dict["hash"].hex(),
             parent_hash=block_dict["parentHash"].hex(),
             gas_limit=block_dict["gasLimit"],
-            # gas_limit=to_int(hexstr=block_dict["gasLimit"]),
             gas_used=block_dict["gasUsed"],
-            # gas_used=to_int(hexstr=block_dict["gasUsed"]),
             miner=to_normalized_address(block_dict["miner"]),
             transactions=[]  # 暂时简化，不处理交易
         )
