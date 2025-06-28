@@ -3,6 +3,8 @@ from web3 import Web3
 from exporters.console_exporter import ConsoleExporter
 from exporters.json_exporter import JsonExporter
 from jobs.export_blocks_job import ExportBlocksJob
+from jobs.export_transactions_and_logs_job import ExportTransactionsAndLogsJob
+from scheduler.simple_job_scheduler import SimpleJobScheduler
 
 
 def test_mvp():
@@ -15,15 +17,14 @@ def test_mvp():
         JsonExporter("output")
     ]
 
-    # 创建数据缓冲区
-    data_buff = {}
-
-    # 创建作业
-    job = ExportBlocksJob(web3, exporters, data_buff)
+    # 创建调度器
+    scheduler = SimpleJobScheduler(web3_provider=web3, exporters=exporters)
+    scheduler.register_job(ExportBlocksJob)
+    scheduler.register_job(ExportTransactionsAndLogsJob)
 
     # 测试少量区块
     print("开始测试...")
-    job.run(start_block=19000000, end_block=19000002)
+    scheduler.run_jobs(start_block=22799900, end_block=22799903)
     print("测试完成!")
 
 
