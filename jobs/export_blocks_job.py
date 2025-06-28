@@ -6,11 +6,10 @@ class ExportBlocksJob(BaseJob):
     dependency_types = []
     output_types = [Block]
 
-    def __init__(self, web3_provider, exporters, data_buff, **kwargs):
+    def __init__(self, web3_provider, exporters, **kwargs):
         super().__init__(
             web3_provider=web3_provider,
             exporters=exporters,
-            data_buff=data_buff,
             **kwargs
         )
 
@@ -42,15 +41,3 @@ class ExportBlocksJob(BaseJob):
             # 按区块号排序
             blocks.sort(key=lambda block: block.number)
             print(f"区块数据处理完成，共 {len(blocks)} 个区块")
-
-    # def _export(self):
-    #     """导出数据到配置的导出器"""
-    #     if Block.type() in self.data_buff:
-    #         blocks = self.data_buff[Block.type()]
-    #         for exporter in self.exporters:
-    #             exporter.export_items(blocks)
-
-
-
-
-

@@ -1,19 +1,18 @@
-from collections import defaultdict
+from jobs.base_job import BaseJob
 
 
 class SimpleJobScheduler:
+
     def __init__(self, web3_provider, exporters):
         self.web3_provider = web3_provider
         self.exporters = exporters
-        self.data_buff = defaultdict(list)  # 创建实例级别的缓冲区
         self.jobs = []
 
     def register_job(self, job_class):
         """手动注册作业类"""
         job = job_class(
             web3_provider=self.web3_provider,
-            exporters=self.exporters,
-            data_buff=self.data_buff,
+            exporters=self.exporters
         )
 
         self.jobs.append(job)
@@ -25,15 +24,18 @@ class SimpleJobScheduler:
         print(f"开始执行作业序列: {start_block} - {end_block}")
         for job in self.jobs:
             print(f"execute job: {job.__class__.__name__}")
+            print(f"当前 data_buff 内容: {list(BaseJob.data_buff.keys())}")
+            print(f"当前 data_buff 内容: {BaseJob.data_buff.get('Block')}")
             job.run(start_block=start_block, end_block=end_block)
 
         # 输出统计信息
         print("\n=== 数据统计 ===")
         for job in self.jobs:
             for output_type in job.output_types:
-                count = self.data_buff.get(output_type.type(), [])
+                count = BaseJob.data_buff.get(output_type.type(), [])
                 print(f"output type: {output_type}, {len(count)} records")
 
-    def clear_data_buff(self):
+    @staticmethod
+    def clear_data_buff():
         """清空数据缓冲区"""
-        self.data_buff.clear()
+        BaseJob.data_buff.clear()

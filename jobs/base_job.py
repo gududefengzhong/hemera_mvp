@@ -8,25 +8,23 @@ class BaseJob:
 
     dependency_types = []
     output_types = []
+    data_buff = defaultdict(list)
     able_to_reorg = False
 
-    def __init__(self, web3_provider=None, exporters=None, data_buff=None, **kwargs):
+    def __init__(self, web3_provider=None, exporters=None, **kwargs):
         self.web3_provider = web3_provider
         self.exporters = exporters or []
-        self.data_buff = data_buff or defaultdict(list)
         self.item_exporters = kwargs.get("item_exporters", [])
         self.required_output_types = kwargs.get("required_output_types", [])
 
     def run(self, start_block, end_block):
         self._collect(start_block, end_block)
-        self._export()
+        self._process()
         self._export()
 
-    def _collect(self, key, data):
-        """收集数据项到缓冲区"""
-        if key not in self.data_buff:
-            self.data_buff[key] = []
-        self.data_buff[key].append(data)
+    def _collect(self, start_block, end_block):
+        """收集数据项到缓冲区，子类实现"""
+        pass
 
     def _process(self):
         """子类重写此方法来处理数据"""
@@ -39,7 +37,7 @@ class BaseJob:
             if items:
                 for exporter in self.exporters:
                     if hasattr(exporter, 'export_items'):
-                        exporter.export_items(items)
+                        exporter.export_items(items, output_type.type())
 
     def _collect_item(self, key, data):
         """收集数据项到缓冲区"""

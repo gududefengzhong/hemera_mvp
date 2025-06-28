@@ -10,15 +10,14 @@ class ExportTransactionsAndLogsJob(BaseJob):
     dependency_types = [Block]
     output_types = [Transaction, Log]
 
-    def __init__(self, web3_provider, exporters, data_buff, **kwargs):
+    def __init__(self, web3_provider, exporters, **kwargs):
         super().__init__(
             web3_provider=web3_provider,
             exporters=exporters,
-            data_buff=data_buff,
             **kwargs
         )
 
-    def run_job(self, start_block, end_block):
+    def run(self, start_block, end_block):
         """执行交易和日志数据收集和导出"""
         print("开始处理交易和日志数据...")
         self._collect(start_block, end_block)

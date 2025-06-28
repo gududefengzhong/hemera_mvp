@@ -1,3 +1,5 @@
+import logging
+
 from web3 import Web3
 
 from exporters.console_exporter import ConsoleExporter
@@ -24,7 +26,7 @@ def test_mvp():
 
     # 测试少量区块
     print("开始测试...")
-    scheduler.run_jobs(start_block=22799900, end_block=22799903)
+    scheduler.run_jobs(start_block=22799901, end_block=22799901)
     print("测试完成!")
 
 

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from eth_utils import to_int, to_normalized_address
+from eth_utils import to_normalized_address
 
 
 @dataclass
@@ -21,13 +21,23 @@ class Log:
 
     @staticmethod
     def from_rpc(log_dict: dict, block_timestamp=None, block_hash=None, block_number=None):
-        topics = log_dict.get("topics", [])
+        def safe_hex(value):
+            if hasattr(value, 'hex'):
+                return value.hex()
+            return str(value)
+
+        def safe_hex_list(hex_list):
+            if not hex_list:
+                return []
+            return [safe_hex(item) for item in hex_list]
+
+        topics = safe_hex_list(log_dict.get("topics", []))
         return Log(
-            log_index=to_int(hexstr=log_dict["logIndex"]),
+            log_index=log_dict["logIndex"],
             address=to_normalized_address(log_dict["address"]),
-            data=log_dict["data"],
-            transaction_hash=log_dict["transactionHash"],
-            transaction_index=to_int(hexstr=log_dict["transactionIndex"]),
+            data=safe_hex(log_dict["data"]),
+            transaction_hash=safe_hex(log_dict["transactionHash"]),
+            transaction_index=log_dict["transactionIndex"],
             block_timestamp=block_timestamp,
             block_number=block_number,
             block_hash=block_hash,

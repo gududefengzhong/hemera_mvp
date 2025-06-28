@@ -26,27 +26,38 @@ class Receipt:
 
     @staticmethod
     def from_rpc(receipt_dict: dict, block_timestamp=None, block_hash=None, block_number=None):
+        def safe_hex(value):
+            if hasattr(value, 'hex'):
+                return value.hex()
+            return str(value)
+
+        def safe_hex_list(hex_list):
+            if not hex_list:
+                return []
+            return [safe_hex(item) for item in hex_list]
+
         logs = [
             Log.from_rpc(log_dict, block_timestamp, block_hash, block_number)
             for log_dict in receipt_dict.get("logs", [])
         ]
+
         return Receipt(
-            transaction_hash=receipt_dict["transactionHash"],
-            transaction_index=to_int(hexstr=receipt_dict["transactionIndex"]),
+            transaction_hash=safe_hex(receipt_dict["transactionHash"]),
+            transaction_index=receipt_dict["transactionIndex"],
             contract_address=(
                 to_normalized_address(receipt_dict.get("contractAddress"))
                 if receipt_dict.get("contractAddress")
                 else None
             ),
-            status=to_int(hexstr=receipt_dict["status"]),
+            status=receipt_dict["status"],
             logs=logs,
             root=receipt_dict.get("root"),
             cumulative_gas_used=(
-                to_int(hexstr=receipt_dict.get("cumulativeGasUsed")) if receipt_dict.get("cumulativeGasUsed") else None
+                receipt_dict.get("cumulativeGasUsed") if receipt_dict.get("cumulativeGasUsed") else None
             ),
-            gas_used=(to_int(hexstr=receipt_dict.get("gasUsed")) if receipt_dict.get("gasUsed") else None),
+            gas_used=(receipt_dict.get("gasUsed") if receipt_dict.get("gasUsed") else None),
             effective_gas_price=(
-                to_int(hexstr=receipt_dict.get("effectiveGasPrice")) if receipt_dict.get("effectiveGasPrice") else None
+                receipt_dict.get("effectiveGasPrice") if receipt_dict.get("effectiveGasPrice") else None
             ),
             l1_fee=(to_int(hexstr=receipt_dict.get("l1Fee")) if receipt_dict.get("l1Fee") else None),
             l1_fee_scalar=(float(receipt_dict.get("l1FeeScalar")) if receipt_dict.get("l1FeeScalar") else None),
@@ -60,5 +71,5 @@ class Receipt:
 
     @staticmethod
     def type():
-        return "receipt"
+        return "Receipt"
 

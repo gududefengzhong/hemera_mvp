@@ -26,8 +26,14 @@ class Block:
 
         # 处理交易数据
         transactions = []
+        # idx = 1
         if "transactions" in block_dict and block_dict["transactions"]:
             for tx_dict in block_dict["transactions"]:
+                # 为了加快测试进度，这里控制 transaction 长度
+                # idx += 1
+                # if idx >= 5:
+                #     break
+
                 transaction = Transaction.from_rpc(
                     tx_dict,
                     block_timestamp=to_int(block_dict["timestamp"]),
